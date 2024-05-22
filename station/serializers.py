@@ -42,6 +42,15 @@ class TrainSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    source = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True,
+    )
+    destination = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True,
+    )
+
     class Meta:
         model = Route
         fields = "__all__"

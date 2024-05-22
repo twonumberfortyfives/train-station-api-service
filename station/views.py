@@ -53,6 +53,13 @@ class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ('list', 'retrieve'):
+            queryset = queryset.select_related("source", "destination")
+            return queryset
+        return queryset
+
 
 class JourneyViewSet(viewsets.ModelViewSet):
     queryset = Journey.objects.all()

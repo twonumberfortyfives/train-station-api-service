@@ -31,6 +31,11 @@ class CrewSerializer(serializers.ModelSerializer):
 
 
 class TrainSerializer(serializers.ModelSerializer):
+    train_type = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="name",
+    )
+
     class Meta:
         model = Train
         fields = "__all__"

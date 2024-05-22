@@ -25,6 +25,11 @@ class StationSerializer(serializers.ModelSerializer):
 
 
 class CrewSerializer(serializers.ModelSerializer):
+    full_name = serializers.StringRelatedField(
+        source="__str__",
+        read_only=True,
+    )
+
     class Meta:
         model = Crew
         fields = "__all__"

@@ -65,6 +65,19 @@ class JourneyViewSet(viewsets.ModelViewSet):
     queryset = Journey.objects.all()
     serializer_class = JourneySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ('list', 'retrieve'):
+            queryset = queryset.select_related(
+                "route",
+                "train"
+            ).prefetch_related(
+                "route__source",
+                "route__destination",
+                "train__train_type"
+            )
+        return queryset
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

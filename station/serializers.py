@@ -62,6 +62,9 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class JourneySerializer(serializers.ModelSerializer):
+    route = RouteSerializer(read_only=True)
+    train = TrainSerializer(read_only=True)
+
     class Meta:
         model = Journey
         fields = "__all__"

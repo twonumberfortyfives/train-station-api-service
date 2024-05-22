@@ -1,5 +1,25 @@
 [
   {
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+      "username": "john_doe",
+      "email": "john@example.com",
+      "first_name": "John",
+      "last_name": "Doe"
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 2,
+    "fields": {
+      "username": "jane_smith",
+      "email": "jane@example.com",
+      "first_name": "Jane",
+      "last_name": "Smith"
+    }
+  },
+  {
     "model": "station.traintype",
     "pk": 1,
     "fields": {

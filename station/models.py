@@ -26,8 +26,8 @@ class Train(models.Model):
 
 
 class Route(models.Model):
-    source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='routes')
-    destination = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='routes')
+    source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='routes_source')
+    destination = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='routes_destination')
     distance = models.IntegerField()
 
 

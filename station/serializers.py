@@ -14,47 +14,47 @@ from station.models import (
 
 class TrainTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        models = TrainType
+        model = TrainType
         fields = "__all__"
 
 
 class StationSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Station
+        model = Station
         fields = "__all__"
 
 
 class CrewSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Crew
+        model = Crew
         fields = "__all__"
 
 
 class TrainSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Train
+        model = Train
         fields = "__all__"
 
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Route
+        model = Route
         fields = "__all__"
 
 
 class JourneySerializer(serializers.ModelSerializer):
     class Meta:
-        models = Journey
+        model = Journey
         fields = "__all__"
 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Order
+        model = Order
         fields = "__all__"
 
 
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Ticket
+        model = Ticket
         fields = "__all__"

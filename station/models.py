@@ -32,8 +32,8 @@ class Route(models.Model):
 
 
 class Journey(models.Model):
-    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='journies')
-    train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='journies')
+    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='journeys')
+    train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='journeys')
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
 

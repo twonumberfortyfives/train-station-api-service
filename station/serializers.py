@@ -89,7 +89,7 @@ class JourneySerializer(serializers.ModelSerializer):
 
 
 class JourneyListSerializer(serializers.ModelSerializer):
-    route = RouteSerializer(read_only=True)
+    route = RouteListSerializer(read_only=True)
     train = TrainSerializer(read_only=True)
 
     class Meta:

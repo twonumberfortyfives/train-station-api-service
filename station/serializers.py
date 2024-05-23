@@ -41,6 +41,13 @@ class TrainSerializer(serializers.ModelSerializer):
         model = Train
         fields = "__all__"
 
+    def validate(self, attrs):
+        Train.validate_train(
+            cargo_num=attrs["cargo_num"],
+            places_in_cargo=attrs["places_in_cargo"],
+            error_to_raise=serializers.ValidationError,
+        )
+
 
 class TrainListSerializer(serializers.ModelSerializer):
     train_type = serializers.SlugRelatedField(

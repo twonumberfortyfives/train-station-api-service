@@ -41,6 +41,30 @@ class Train(models.Model):
     def __str__(self):
         return f"{self.name} ({self.train_type}) cargos: {self.cargo_num}, places in cargo: {self.places_in_cargo}"
 
+    @staticmethod
+    def validate_train(cargo_num, places_in_cargo, error_to_raise):
+        if not (1 <= cargo_num <= 10):
+            raise error_to_raise(
+                f"Amount of cargos must be in (1, 10)"
+            )
+        elif not (1 <= places_in_cargo <= 25):
+            raise error_to_raise(
+                f"Amount of places in cargo must be in (1, 25)"
+            )
+
+    def clean(self):
+        Train.validate_train(self.cargo_num, self.places_in_cargo, ValidationError)
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+    ):
+        self.clean_fields()
+        return super(Train, self).save(force_insert, force_update, using, update_fields)
+
 
 class Route(models.Model):
     source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='routes_source')

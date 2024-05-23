@@ -48,7 +48,9 @@ class Route(models.Model):
     distance = models.IntegerField()
 
     class Meta:
-        unique_together = (('source', 'destination'),)
+        constraints = [
+            models.UniqueConstraint(fields=['source', 'destination'], name='unique_route')
+        ]
         indexes = [
             models.Index(fields=['source', 'destination']),
         ]
@@ -97,6 +99,11 @@ class Ticket(models.Model):
     seat = models.IntegerField()
     journey = models.ForeignKey(Journey, on_delete=models.CASCADE, related_name='tickets')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets', null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['cargo', 'seat', 'journey'], name='unique_ticket')
+        ]
 
     @staticmethod
     def validate_seat(cargo, seat, train_cargo_num, train_places_in_cargo, error_to_raise):

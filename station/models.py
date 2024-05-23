@@ -96,17 +96,17 @@ class Ticket(models.Model):
     cargo = models.IntegerField()
     seat = models.IntegerField()
     journey = models.ForeignKey(Journey, on_delete=models.CASCADE, related_name='tickets')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets', null=True, blank=True)
 
     @staticmethod
     def validate_seat(cargo, seat, train_cargo_num, train_places_in_cargo, error_to_raise):
-        if cargo > train_cargo_num or cargo < train_cargo_num:
-            error_to_raise(
-                f"Cargo must be in range [1, {train_cargo_num}]]"
+        if not (1 <= cargo <= train_cargo_num):
+            raise error_to_raise(
+                f"Cargo must be in range [1, {train_cargo_num}]"
             )
-        elif seat > train_places_in_cargo or seat < train_places_in_cargo:
-            error_to_raise(
-                f"Seat must be in range [1, {train_places_in_cargo}]]"
+        elif not (1 <= seat <= train_places_in_cargo):
+            raise error_to_raise(
+                f"Seat must be in range [1, {train_places_in_cargo}]"
             )
 
     def clean(self):
@@ -115,7 +115,7 @@ class Ticket(models.Model):
             seat=self.seat,
             train_cargo_num=self.journey.train.cargo_num,
             train_places_in_cargo=self.journey.train.places_in_cargo,
-            error_to_raise=ValueError
+            error_to_raise=ValidationError
         )
 
     def save(
@@ -126,6 +126,7 @@ class Ticket(models.Model):
             update_fields=None
     ):
         self.clean_fields()
+        self.clean()
         return super(Ticket, self).save(
             force_insert,
             force_update,

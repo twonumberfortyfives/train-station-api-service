@@ -100,16 +100,17 @@ class JourneyListSerializer(serializers.ModelSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = "__all__"
+        fields = ("id", "cargo", "seat", "journey")
 
     def validate(self, attrs):
         Ticket.validate_seat(
-            cargo=attrs["seat"],
+            cargo=attrs["cargo"],
             seat=attrs["seat"],
             train_cargo_num=attrs["journey"].train.cargo_num,
-            train_places_in_cargo=attrs["journey"].train_places_in_cargo,
+            train_places_in_cargo=attrs["journey"].train.places_in_cargo,
             error_to_raise=serializers.ValidationError
         )
+        return attrs
 
 
 class TicketListSerializer(serializers.ModelSerializer):
@@ -132,7 +133,7 @@ class TicketForOrderSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True, read_only=True)
+    tickets = TicketSerializer(many=True, read_only=False)
 
     class Meta:
         model = Order

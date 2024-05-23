@@ -122,6 +122,9 @@ class OrderViewSet(viewsets.ModelViewSet):
             return OrderListSerializer
         return OrderSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -144,6 +147,3 @@ class TicketViewSet(viewsets.ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return TicketListSerializer
         return TicketSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)

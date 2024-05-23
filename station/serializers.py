@@ -58,6 +58,14 @@ class RouteSerializer(serializers.ModelSerializer):
         model = Route
         fields = "__all__"
 
+    def validate(self, attrs):
+        Route.validate_source_destination(
+            attrs["source"],
+            attrs["destination"],
+            serializers.ValidationError
+        )
+        return attrs
+
 
 class RouteListSerializer(serializers.ModelSerializer):
     source = serializers.SlugRelatedField(

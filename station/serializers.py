@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from station.models import (
@@ -62,6 +63,12 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class JourneySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Journey
+        fields = "__all__"
+
+
+class JourneyListSerializer(serializers.ModelSerializer):
     route = RouteSerializer(read_only=True)
     train = TrainSerializer(read_only=True)
 
@@ -70,13 +77,43 @@ class JourneySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = "__all__"
-
-
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
+        fields = "__all__"
+
+
+class TicketForOrderSerializer(serializers.ModelSerializer):
+    journey = serializers.StringRelatedField(
+        read_only=True,
+        source="journey.route.__str__",
+    )
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "journey", "cargo", "seat")
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ("id", "tickets", "created_at")
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            tickets_data = validated_data.pop("tickets")
+            order = Order.objects.create(**validated_data)
+            for ticket in tickets_data:
+                Ticket.objects.create(order=order, **ticket)
+            return order
+
+
+class OrderListSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    tickets = TicketForOrderSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
         fields = "__all__"

@@ -15,6 +15,9 @@ class Station(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=255)
@@ -48,6 +51,9 @@ class Journey(models.Model):
     train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='journeys')
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.route} {self.train} DEPARTURE: ({self.departure_time}), ARRIVAL: ({self.arrival_time})"
 
 
 class Order(models.Model):

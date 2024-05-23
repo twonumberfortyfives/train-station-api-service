@@ -69,12 +69,19 @@ class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
-        if self.action in ('list', 'retrieve'):
-            queryset = queryset.select_related(
+        queryset = self.queryset.select_related(
                 "source",
                 "destination"
             )
+        source = self.request.query_params.get("source")
+        destination = self.request.query_params.get("destination")
+        if source:
+            return queryset.filter(source__name__icontains=source)
+        elif destination:
+            return queryset.filter(destination__name__icontains=destination)
+        elif source and destination:
+            return queryset.filter(source__name__icontains=source, destination__name__icontains=destination)
+        if self.action in ('list', 'retrieve'):
             return queryset
         return queryset
 
@@ -89,9 +96,7 @@ class JourneyViewSet(viewsets.ModelViewSet):
     serializer_class = JourneySerializer
 
     def get_queryset(self):
-        queryset = self.queryset
-        if self.action in ('list', 'retrieve'):
-            queryset = queryset.select_related(
+        queryset = self.queryset.select_related(
                 "route",
                 "train"
             ).prefetch_related(
@@ -99,6 +104,13 @@ class JourneyViewSet(viewsets.ModelViewSet):
                 "route__destination",
                 "train__train_type"
             )
+        departure_time = self.request.query_params.get("departure_time")
+        arrival_time = self.request.query_params.get("arrival_time")
+        if departure_time:
+            return queryset.filter(departure_time__icontains=departure_time)
+        elif arrival_time:
+            return queryset.filter(arrival_time__icontains=arrival_time)
+        if self.action in ('list', 'retrieve'):
             return queryset
         return queryset
 

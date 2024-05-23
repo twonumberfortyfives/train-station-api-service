@@ -91,10 +91,24 @@ class JourneySerializer(serializers.ModelSerializer):
 class JourneyListSerializer(serializers.ModelSerializer):
     route = RouteListSerializer(read_only=True)
     train = TrainSerializer(read_only=True)
+    ticket_available = serializers.SerializerMethodField(
+        method_name="get_ticket_available"
+    )
+    places_occupied = serializers.SerializerMethodField(
+        method_name="get_places_occupied"
+    )
 
     class Meta:
         model = Journey
         fields = "__all__"
+
+    def get_ticket_available(self, obj):
+        tickets_in_total = obj.tickets.count()
+        all_places = obj.train.capacity
+        return all_places - tickets_in_total
+
+    def get_places_occupied(self, obj):
+        return obj.tickets.count()
 
 
 class TicketSerializer(serializers.ModelSerializer):

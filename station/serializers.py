@@ -102,6 +102,15 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = "__all__"
 
+    def validate(self, attrs):
+        Ticket.validate_seat(
+            cargo=attrs["seat"],
+            seat=attrs["seat"],
+            train_cargo_num=attrs["journey"].train.cargo_num,
+            train_places_in_cargo=attrs["journey"].train_places_in_cargo,
+            error_to_raise=serializers.ValidationError
+        )
+
 
 class TicketListSerializer(serializers.ModelSerializer):
     journey = JourneyListSerializer(read_only=True)

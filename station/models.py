@@ -34,6 +34,10 @@ class Train(models.Model):
     places_in_cargo = models.IntegerField()
     train_type = models.ForeignKey(TrainType, on_delete=models.CASCADE, related_name='trains')
 
+    @property
+    def capacity(self):
+        return self.places_in_cargo * self.cargo_num
+
     def __str__(self):
         return f"{self.name} ({self.train_type}) cargos: {self.cargo_num}, places in cargo: {self.places_in_cargo}"
 
@@ -93,3 +97,38 @@ class Ticket(models.Model):
     seat = models.IntegerField()
     journey = models.ForeignKey(Journey, on_delete=models.CASCADE, related_name='tickets')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets')
+
+    @staticmethod
+    def validate_seat(cargo, seat, train_cargo_num, train_places_in_cargo, error_to_raise):
+        if cargo > train_cargo_num or cargo < train_cargo_num:
+            error_to_raise(
+                f"Cargo must be in range [1, {train_cargo_num}]]"
+            )
+        elif seat > train_places_in_cargo or seat < train_places_in_cargo:
+            error_to_raise(
+                f"Seat must be in range [1, {train_places_in_cargo}]]"
+            )
+
+    def clean(self):
+        Ticket.validate_seat(
+            cargo=self.cargo,
+            seat=self.seat,
+            train_cargo_num=self.journey.train.cargo_num,
+            train_places_in_cargo=self.journey.train.places_in_cargo,
+            error_to_raise=ValueError
+        )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+    ):
+        self.clean_fields()
+        return super(Ticket, self).save(
+            force_insert,
+            force_update,
+            using,
+            update_fields
+        )

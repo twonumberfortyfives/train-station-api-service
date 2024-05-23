@@ -47,9 +47,14 @@ class TrainViewSet(viewsets.ModelViewSet):
     serializer_class = TrainSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.select_related()
+        name = self.request.query_params.get('name')
+        train_type = self.request.query_params.get('train_type')
+        if name:
+            return queryset.filter(name__icontains=name)
+        if train_type:
+            return queryset.filter(train_type__name__icontains=train_type)
         if self.action in ('list', 'retrieve'):
-            queryset = queryset.select_related()
             return queryset
         return queryset
 

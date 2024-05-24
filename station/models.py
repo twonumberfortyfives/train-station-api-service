@@ -5,16 +5,16 @@ from train_station_api_service import settings
 
 
 class TrainType(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Station(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    name = models.CharField(max_length=255)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=False)
 
     def __str__(self):
         return self.name
@@ -72,9 +72,6 @@ class Route(models.Model):
     distance = models.IntegerField()
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['source', 'destination'], name='unique_route')
-        ]
         indexes = [
             models.Index(fields=['source', 'destination']),
         ]
@@ -123,11 +120,6 @@ class Ticket(models.Model):
     seat = models.IntegerField()
     journey = models.ForeignKey(Journey, on_delete=models.CASCADE, related_name='tickets')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets', null=True, blank=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['cargo', 'seat', 'journey'], name='unique_ticket')
-        ]
 
     @staticmethod
     def validate_seat(cargo, seat, train_cargo_num, train_places_in_cargo, error_to_raise):

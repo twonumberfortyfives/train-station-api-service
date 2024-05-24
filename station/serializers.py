@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from station.models import (
     TrainType,
@@ -23,6 +24,12 @@ class StationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Station
         fields = "__all__"
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Station.objects.all(),
+                fields=("name", "latitude", "longitude"),
+            )
+        ]
 
 
 class CrewSerializer(serializers.ModelSerializer):
@@ -64,6 +71,12 @@ class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = "__all__"
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Route.objects.all(),
+                fields=("source", "destination", "distance"),
+            )
+        ]
 
     def validate(self, attrs):
         Route.validate_source_destination(
@@ -122,6 +135,12 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("id", "cargo", "seat", "journey")
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=("cargo", "seat", "journey"),
+            )
+        ]
 
     def validate(self, attrs):
         Ticket.validate_seat(

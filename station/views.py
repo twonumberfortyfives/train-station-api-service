@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 
 from station.models import (
@@ -63,6 +64,19 @@ class TrainViewSet(viewsets.ModelViewSet):
             return TrainListSerializer
         return TrainSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "train type",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filtering by train type name"
+                            "ex(?train_type=Express)"
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request)
+
 
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
@@ -89,6 +103,19 @@ class RouteViewSet(viewsets.ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return RouteListSerializer
         return RouteSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "source/destination",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filtering by source or destination or both"
+                            "ex(?source=Kyiv&?destination=Lviv)",
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().request(list)
 
 
 class JourneyViewSet(viewsets.ModelViewSet):
@@ -118,6 +145,19 @@ class JourneyViewSet(viewsets.ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return JourneyListSerializer
         return JourneySerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "departure_time/arrival_time",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filtering by departure/arrival time "
+                            "ex(?departure_time=2010-10-12../?arrival_time=2012-10-2)",
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request)
 
 
 class OrderViewSet(viewsets.ModelViewSet):

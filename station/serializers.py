@@ -153,12 +153,33 @@ class TicketSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class TicketListSerializer(serializers.ModelSerializer):
-    journey = JourneyListSerializer(read_only=True)
+class JourneySerializerForTicketList(serializers.ModelSerializer):
+    route = RouteListSerializer(read_only=True)
+    train = TrainSerializer(read_only=True)
 
     class Meta:
+        model = Journey
+        fields = "__all__"
+
+
+class TicketListSerializer(serializers.ModelSerializer):
+    source = serializers.CharField(
+        source="journey.route.source",
+        read_only=True,
+    )
+    destination = serializers.CharField(
+        source="journey.route.destination",
+        read_only=True
+    )
+    train = serializers.CharField(
+        source="journey.train.name",
+    )
+    train_type = serializers.CharField(
+        source="journey.train.train_type",
+    )
+    class Meta:
         model = Ticket
-        fields = ("id", "cargo", "seat", "journey")
+        fields = ("id", "cargo", "seat", "source", "destination", "train", "train_type")
 
 
 class TicketForOrderSerializer(serializers.ModelSerializer):

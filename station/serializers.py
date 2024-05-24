@@ -19,6 +19,11 @@ class TrainTypeSerializer(serializers.ModelSerializer):
         model = TrainType
         fields = "__all__"
 
+    def create(self, validated_data):
+        with transaction.atomic():
+            train_type = TrainType.objects.create(**validated_data)
+            return train_type
+
 
 class StationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,6 +36,11 @@ class StationSerializer(serializers.ModelSerializer):
             )
         ]
 
+    def create(self, validated_data):
+        with transaction.atomic():
+            station = Station.objects.create(**validated_data)
+            return station
+
 
 class CrewSerializer(serializers.ModelSerializer):
     full_name = serializers.StringRelatedField(
@@ -41,6 +51,11 @@ class CrewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
         fields = "__all__"
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            crew = Crew.objects.create(**validated_data)
+            return crew
 
 
 class TrainSerializer(serializers.ModelSerializer):
@@ -54,6 +69,11 @@ class TrainSerializer(serializers.ModelSerializer):
             places_in_cargo=attrs["places_in_cargo"],
             error_to_raise=serializers.ValidationError,
         )
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            train = Train.objects.create(**validated_data)
+            return train
 
 
 class TrainListSerializer(serializers.ModelSerializer):
@@ -86,6 +106,11 @@ class RouteSerializer(serializers.ModelSerializer):
         )
         return attrs
 
+    def create(self, validated_data):
+        with transaction.atomic():
+            route = Route.objects.create(**validated_data)
+            return route
+
 
 class RouteListSerializer(serializers.ModelSerializer):
     source = serializers.SlugRelatedField(
@@ -106,6 +131,11 @@ class JourneySerializer(serializers.ModelSerializer):
     class Meta:
         model = Journey
         fields = "__all__"
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            journey = Journey.objects.create(**validated_data)
+            return journey
 
 
 class JourneyListSerializer(serializers.ModelSerializer):
@@ -151,6 +181,11 @@ class TicketSerializer(serializers.ModelSerializer):
             error_to_raise=serializers.ValidationError
         )
         return attrs
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            ticket = Ticket.objects.create(**validated_data)
+            return ticket
 
 
 class JourneySerializerForTicketList(serializers.ModelSerializer):

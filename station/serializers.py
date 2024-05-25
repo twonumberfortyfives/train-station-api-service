@@ -58,6 +58,12 @@ class CrewSerializer(serializers.ModelSerializer):
             return crew
 
 
+class ImageTrainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Train
+        fields = ("id", "image")
+
+
 class TrainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Train
@@ -69,6 +75,7 @@ class TrainSerializer(serializers.ModelSerializer):
             places_in_cargo=attrs["places_in_cargo"],
             error_to_raise=serializers.ValidationError,
         )
+        return attrs
 
     def create(self, validated_data):
         with transaction.atomic():

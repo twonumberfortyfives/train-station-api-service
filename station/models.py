@@ -1,4 +1,9 @@
+import os
+import uuid
+
+from django.utils.text import slugify
 from django.db import models
+
 from rest_framework.exceptions import ValidationError
 
 from train_station_api_service import settings
@@ -28,11 +33,19 @@ class Crew(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
+def train_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.name)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/trains/", filename)
+
+
 class Train(models.Model):
     name = models.CharField(max_length=255, unique=True)
     cargo_num = models.IntegerField()
     places_in_cargo = models.IntegerField()
     train_type = models.ForeignKey(TrainType, on_delete=models.CASCADE, related_name='trains')
+    image = models.ImageField(upload_to=train_image_file_path, null=True, blank=True)
 
     @property
     def capacity(self):

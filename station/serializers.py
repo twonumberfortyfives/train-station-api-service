@@ -107,9 +107,7 @@ class RouteSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         Route.validate_source_destination(
-            attrs["source"],
-            attrs["destination"],
-            serializers.ValidationError
+            attrs["source"], attrs["destination"], serializers.ValidationError
         )
         return attrs
 
@@ -185,7 +183,7 @@ class TicketSerializer(serializers.ModelSerializer):
             seat=attrs["seat"],
             train_cargo_num=attrs["journey"].train.cargo_num,
             train_places_in_cargo=attrs["journey"].train.places_in_cargo,
-            error_to_raise=serializers.ValidationError
+            error_to_raise=serializers.ValidationError,
         )
         return attrs
 
@@ -210,8 +208,7 @@ class TicketListSerializer(serializers.ModelSerializer):
         read_only=True,
     )
     destination = serializers.CharField(
-        source="journey.route.destination",
-        read_only=True
+        source="journey.route.destination", read_only=True
     )
     train = serializers.CharField(
         source="journey.train.name",
@@ -219,6 +216,7 @@ class TicketListSerializer(serializers.ModelSerializer):
     train_type = serializers.CharField(
         source="journey.train.train_type",
     )
+
     class Meta:
         model = Ticket
         fields = ("id", "cargo", "seat", "source", "destination", "train", "train_type")

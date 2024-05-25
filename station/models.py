@@ -97,6 +97,7 @@ class Route(models.Model):
             update_fields=None
     ):
         self.clean_fields()
+        self.clean()
         return super(Route, self).save(force_insert, force_update, using, update_fields)
 
 

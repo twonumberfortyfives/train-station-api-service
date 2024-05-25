@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from station.models import (
     TrainType,
@@ -115,7 +116,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         ]
     )
     def list(self, request, *args, **kwargs):
-        return super().request(list)
+        return super().list(request)
 
 
 class JourneyViewSet(viewsets.ModelViewSet):
@@ -157,21 +158,25 @@ class JourneyViewSet(viewsets.ModelViewSet):
         ]
     )
     def list(self, request, *args, **kwargs):
-        return super().list(request)
+            return super().list(request)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ('list', 'retrieve'):
-            queryset = queryset.select_related(
-                "user"
-            ).prefetch_related(
-                "tickets__journey__route",
-            )
+            if self.request.user.is_authenticated and not self.request.user.is_staff:
+                queryset = queryset.filter(user=self.request.user)
+            else:
+                queryset = queryset.select_related(
+                    "user"
+                ).prefetch_related(
+                    "tickets__journey__route",
+                )
         return queryset
 
     def get_serializer_class(self):

@@ -219,7 +219,15 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ("id", "cargo", "seat", "source", "destination", "train", "train_type")
+        fields = (
+            "id",
+            "cargo",
+            "seat",
+            "source",
+            "destination",
+            "train",
+            "train_type"
+        )
 
 
 class TicketForOrderSerializer(serializers.ModelSerializer):

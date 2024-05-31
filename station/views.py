@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser

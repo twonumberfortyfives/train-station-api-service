@@ -47,21 +47,26 @@ class Train(models.Model):
     train_type = models.ForeignKey(
         TrainType, on_delete=models.CASCADE, related_name="trains"
     )
-    image = models.ImageField(upload_to=train_image_file_path, null=True, blank=True)
+    image = models.ImageField(
+        upload_to=train_image_file_path,
+        null=True,
+        blank=True
+    )
 
     @property
     def capacity(self):
         return self.places_in_cargo * self.cargo_num
 
     def __str__(self):
-        return f"{self.name} ({self.train_type}) cargos: {self.cargo_num}, places in cargo: {self.places_in_cargo}"
+        return (f"{self.name} ({self.train_type}) cargos: {self.cargo_num}, "
+                f"places in cargo: {self.places_in_cargo}")
 
     @staticmethod
     def validate_train(cargo_num, places_in_cargo, error_to_raise):
         if not (1 <= cargo_num <= 10):
-            raise error_to_raise(f"Amount of cargos must be in (1, 10)")
+            raise error_to_raise("Amount of cargos must be in (1, 10)")
         elif not (1 <= places_in_cargo <= 25):
-            raise error_to_raise(f"Amount of places in cargo must be in (1, 25)")
+            raise error_to_raise("Amount of places in cargo must be in (1, 25)")
 
     def clean(self):
         Train.validate_train(self.cargo_num, self.places_in_cargo, ValidationError)
@@ -152,7 +157,11 @@ class Ticket(models.Model):
         )
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
     ):
         self.clean_fields()
         self.clean()

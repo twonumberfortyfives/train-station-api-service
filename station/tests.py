@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls.base import reverse
+
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from station.models import Train, TrainType, Journey, Route, Station, Order
+from station.models import Train, TrainType, Journey, Route, Station
 from station.serializers import TrainListSerializer
 
 STATIONS_URL = reverse("station:station-list")

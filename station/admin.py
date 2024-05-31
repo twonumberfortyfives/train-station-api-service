@@ -31,7 +31,13 @@ class CrewAdmin(admin.ModelAdmin):
 
 @admin.register(Train)
 class TrainAdmin(admin.ModelAdmin):
-    list_display = ("name", "cargo_num", "places_in_cargo", "train_type", "capacity")
+    list_display = (
+        "name",
+        "cargo_num",
+        "places_in_cargo",
+        "train_type",
+        "capacity"
+    )
     search_fields = ("name",)
     list_filter = ("train_type",)
     ordering = ("name",)
@@ -48,7 +54,11 @@ class RouteAdmin(admin.ModelAdmin):
 @admin.register(Journey)
 class JourneyAdmin(admin.ModelAdmin):
     list_display = ("route", "train", "departure_time", "arrival_time")
-    search_fields = ("route__source__name", "route__destination__name", "train__name")
+    search_fields = (
+        "route__source__name",
+        "route__destination__name",
+        "train__name"
+    )
     list_filter = ("departure_time", "arrival_time")
     ordering = ("departure_time",)
 

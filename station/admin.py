@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, register
 from .models import (
     TrainType,
     Station,
@@ -11,26 +11,26 @@ from .models import (
 )
 
 
-@admin.register(TrainType)
-class TrainTypeAdmin(admin.ModelAdmin):
+@register(TrainType)
+class TrainTypeAdmin(ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
 
 
-@admin.register(Station)
-class StationAdmin(admin.ModelAdmin):
+@register(Station)
+class StationAdmin(ModelAdmin):
     list_display = ("name", "latitude", "longitude")
     search_fields = ("name",)
 
 
-@admin.register(Crew)
-class CrewAdmin(admin.ModelAdmin):
+@register(Crew)
+class CrewAdmin(ModelAdmin):
     list_display = ("first_name", "last_name")
     search_fields = ("first_name", "last_name")
 
 
-@admin.register(Train)
-class TrainAdmin(admin.ModelAdmin):
+@register(Train)
+class TrainAdmin(ModelAdmin):
     list_display = (
         "name",
         "cargo_num",
@@ -43,16 +43,16 @@ class TrainAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
-@admin.register(Route)
-class RouteAdmin(admin.ModelAdmin):
+@register(Route)
+class RouteAdmin(ModelAdmin):
     list_display = ("source", "destination", "distance")
     search_fields = ("source__name", "destination__name")
     list_filter = ("source", "destination")
     ordering = ("source", "destination")
 
 
-@admin.register(Journey)
-class JourneyAdmin(admin.ModelAdmin):
+@register(Journey)
+class JourneyAdmin(ModelAdmin):
     list_display = ("route", "train", "departure_time", "arrival_time")
     search_fields = (
         "route__source__name",
@@ -63,16 +63,16 @@ class JourneyAdmin(admin.ModelAdmin):
     ordering = ("departure_time",)
 
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+@register(Order)
+class OrderAdmin(ModelAdmin):
     list_display = ("created_at", "user")
     search_fields = ("user__username",)
     list_filter = ("created_at",)
     ordering = ("-created_at",)
 
 
-@admin.register(Ticket)
-class TicketAdmin(admin.ModelAdmin):
+@register(Ticket)
+class TicketAdmin(ModelAdmin):
     list_display = ("cargo", "seat", "journey", "order")
     search_fields = (
         "journey__route__source__name",

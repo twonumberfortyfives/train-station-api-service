@@ -1,5 +1,4 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -79,10 +78,9 @@ class TrainViewSet(viewsets.ModelViewSet):
     def upload_image(self, request, pk=None):
         train = self.get_object()
         serializer = ImageTrainSerializer(train, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         parameters=[
@@ -115,8 +113,6 @@ class RouteViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(destination__name__icontains=destination)
         elif source and destination:
             queryset = queryset.filter(source__name__icontains=source, destination__name__icontains=destination)
-        if self.action in ('list', 'retrieve'):
-            return queryset
         return queryset
 
     def get_serializer_class(self):
@@ -157,8 +153,6 @@ class JourneyViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(departure_time__icontains=departure_time)
         elif arrival_time:
             queryset = queryset.filter(arrival_time__icontains=arrival_time)
-        if self.action in ('list', 'retrieve'):
-            return queryset
         return queryset
 
     def get_serializer_class(self):

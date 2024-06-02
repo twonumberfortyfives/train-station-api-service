@@ -10,6 +10,8 @@ services:
       python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+    environment:
+      SECRET_KEY: "sadkjsakjdka2km2m2k2DJJ."
     ports:
       - "8000:8000"
     depends_on:
@@ -19,3 +21,5 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"

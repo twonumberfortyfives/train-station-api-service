@@ -56,9 +56,9 @@ class TrainViewSet(viewsets.ModelViewSet):
         name = self.request.query_params.get('name')
         train_type = self.request.query_params.get('train_type')
         if name:
-            return queryset.filter(name__icontains=name)
+            queryset = queryset.filter(name__icontains=name)
         if train_type:
-            return queryset.filter(train_type__name__icontains=train_type)
+            queryset = queryset.filter(train_type__name__icontains=train_type)
         if self.action in ('list', 'retrieve'):
             return queryset
         return queryset
@@ -110,11 +110,11 @@ class RouteViewSet(viewsets.ModelViewSet):
         source = self.request.query_params.get("source")
         destination = self.request.query_params.get("destination")
         if source:
-            return queryset.filter(source__name__icontains=source)
+            queryset = queryset.filter(source__name__icontains=source)
         elif destination:
-            return queryset.filter(destination__name__icontains=destination)
+            queryset = queryset.filter(destination__name__icontains=destination)
         elif source and destination:
-            return queryset.filter(source__name__icontains=source, destination__name__icontains=destination)
+            queryset = queryset.filter(source__name__icontains=source, destination__name__icontains=destination)
         if self.action in ('list', 'retrieve'):
             return queryset
         return queryset
@@ -154,9 +154,9 @@ class JourneyViewSet(viewsets.ModelViewSet):
         departure_time = self.request.query_params.get("departure_time")
         arrival_time = self.request.query_params.get("arrival_time")
         if departure_time:
-            return queryset.filter(departure_time__icontains=departure_time)
+            queryset = queryset.filter(departure_time__icontains=departure_time)
         elif arrival_time:
-            return queryset.filter(arrival_time__icontains=arrival_time)
+            queryset = queryset.filter(arrival_time__icontains=arrival_time)
         if self.action in ('list', 'retrieve'):
             return queryset
         return queryset

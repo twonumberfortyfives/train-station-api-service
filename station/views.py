@@ -27,7 +27,8 @@ from station.serializers import (
     OrderListSerializer,
     TicketListSerializer,
     RouteListSerializer,
-    TrainListSerializer, ImageTrainSerializer
+    TrainListSerializer,
+    ImageTrainSerializer
 )
 
 
@@ -190,14 +191,14 @@ class OrderViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-def get_serializer_class(self):
-    if self.action in ('list', 'retrieve'):
-        return OrderListSerializer
-    return OrderSerializer
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return OrderListSerializer
+        return OrderSerializer
 
 
-def perform_create(self, serializer):
-    serializer.save(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
